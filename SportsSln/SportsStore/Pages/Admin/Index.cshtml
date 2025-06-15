@@ -2,6 +2,8 @@
 @{
     Layout = null;
 }
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <!DOCTYPE html>
 <html>
@@ -13,5 +15,5 @@
 <body>
     <component type="typeof(Admin.Routed)" render-mode="Server" />
     <script src="/_framework/blazor.server.js"></script>
-</body> 
+</body>
 </html>
