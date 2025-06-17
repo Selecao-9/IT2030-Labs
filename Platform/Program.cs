@@ -1,16 +1,15 @@
+//using Microsoft.Extensions.Options;
+using Platform;
+
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
 
-((IApplicationBuilder)app).Map("/branch", branch => {
-
-    branch.UseMiddleware<Platform.QueryStringMiddleWare>();
-
-    branch.Run(async (context) => {
-        await context.Response.WriteAsync($"Branch Middleware");
-    });
+builder.Services.Configure<MessageOptions>(options => {
+    options.CityName = "Albany";
 });
 
-app.UseMiddleware<Platform.QueryStringMiddleWare>();
+var app = builder.Build();
+
+app.UseMiddleware<LocationMiddleware>();
 
 app.MapGet("/", () => "Hello World!");
 
