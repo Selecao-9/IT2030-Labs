@@ -3,18 +3,16 @@ using Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-IWebHostEnvironment env = builder.Environment;
-if (env.IsDevelopment())
-{
-    builder.Services.AddScoped<IResponseFormatter,
-        TimeResponseFormatter>();
-    builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
-}
-else
-{
-    builder.Services.AddScoped<IResponseFormatter,
-        HtmlResponseFormatter>();
-}
+//IWebHostEnvironment env = builder.Environment;
+IConfiguration config = builder.Configuration;
+
+builder.Services.AddScoped<IResponseFormatter>(serviceProvider => {
+    string? typeName = config["services:IResponseFormatter"];
+    return (IResponseFormatter)ActivatorUtilities
+        .CreateInstance(serviceProvider, typeName == null
+            ? typeof(GuidService) : Type.GetType(typeName, true)!);
+});
+builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
 
 var app = builder.Build();
 
@@ -29,3 +27,4 @@ app.MapGet("endpoint/function",
     });
 
 app.Run();
+
