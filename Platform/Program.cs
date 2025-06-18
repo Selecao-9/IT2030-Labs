@@ -10,9 +10,9 @@ var app = builder.Build();
 
 app.UseMiddleware<WeatherMiddleware>();
 
-app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+//app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
-//IResponseFormatter formatter = TypeBroker.Formatter;
 app.MapGet("endpoint/function",
     async (HttpContext context, IResponseFormatter formatter) => {
         await formatter.Format(context,
