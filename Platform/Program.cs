@@ -9,9 +9,9 @@ app.UseMiddleware<WeatherMiddleware>();
 
 app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 
-IResponseFormatter formatter = TextResponseFormatter.Singleton;
+IResponseFormatter formatter = TypeBroker.Formatter;
 app.MapGet("endpoint/function", async context => {
-    await formatter.Format(context, 
+    await formatter.Format(context,
         "Endpoint Function: It is sunny in LA");
 });
 
