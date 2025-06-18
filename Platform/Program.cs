@@ -3,14 +3,12 @@ using Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IResponseFormatter,
-    HtmlResponseFormatter>();
+builder.Services.AddTransient<IResponseFormatter, GuidService>();
 
 var app = builder.Build();
 
 app.UseMiddleware<WeatherMiddleware>();
 
-//app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
 app.MapGet("endpoint/function",
