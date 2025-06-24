@@ -3,8 +3,11 @@
     public class Population
     {
 
-        public static async Task Endpoint(HttpContext context)
+        public static async Task Endpoint(HttpContext context,
+                ILogger<Population> logger)
         {
+            logger.LogDebug("Started processing for {path}",
+                context.Request.Path);
             string city = context.Request.RouteValues["city"]
                 as string ?? "london";
             int? pop = null;
@@ -30,6 +33,9 @@
                 context.Response.StatusCode
                     = StatusCodes.Status404NotFound;
             }
+            logger.LogDebug("Finished processing for {path}",
+                context.Request.Path);
         }
     }
 }
+    
