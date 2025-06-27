@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.RateLimiting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDistributedMemoryCache();
@@ -7,7 +9,29 @@ builder.Services.AddSession(opts => {
     opts.Cookie.IsEssential = true;
 });
 
+builder.Services.AddHsts(opts => {
+    opts.MaxAge = TimeSpan.FromDays(1);
+    opts.IncludeSubDomains = true;
+});
+
+builder.Services.AddRateLimiter(opts => {
+    opts.AddFixedWindowLimiter("fixedWindow", fixOpts => {
+        fixOpts.PermitLimit = 1;
+        fixOpts.QueueLimit = 0;
+        fixOpts.Window = TimeSpan.FromSeconds(15);
+    });
+});
+
 var app = builder.Build();
+
+if (app.Environment.IsProduction())
+{
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+
+app.UseRateLimiter();
 
 app.UseSession();
 
@@ -19,13 +43,12 @@ app.MapGet("/session", async context => {
     await context.Session.CommitAsync();
     await context.Response
         .WriteAsync($"Counter1: {counter1}, Counter2: {counter2}");
-});
+}).RequireRateLimiting("fixedWindow");
 
 app.MapFallback(async context => {
     await context.Response
         .WriteAsync($"HTTPS Request: {context.Request.IsHttps} \n");
     await context.Response.WriteAsync("Hello World!");
 });
-
 
 app.Run();
