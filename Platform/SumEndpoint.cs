@@ -20,9 +20,6 @@ namespace Platform
             string totalString = $"({DateTime.Now.ToLongTimeString()}) "
                 + total;
 
-            context.Response.Headers["Cache-Control"]
-                = "public, max-age=120";
-
             string? url = generator.GetPathByRouteValues(context, null,
                 new { count = count });
 
