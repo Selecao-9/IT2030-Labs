@@ -1,6 +1,6 @@
-using Platform.Services;
-using Platform.Models;
 using Microsoft.EntityFrameworkCore;
+using Platform.Models;
+using Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +23,8 @@ builder.Services.AddDbContext<CalculationContext>(opts => {
         builder.Configuration["ConnectionStrings:CalcConnection"]);
 });
 
+builder.Services.AddTransient<SeedData>();
+
 var app = builder.Build();
 
 app.UseOutputCache();
@@ -39,4 +41,13 @@ app.MapGet("/", async context => {
     await context.Response.WriteAsync("Hello World!");
 });
 
-app.Run();
+bool cmdLineInit = (app.Configuration["INITDB"] ?? "false") == "true";
+if (app.Environment.IsDevelopment() || cmdLineInit)
+{
+    var seedData = app.Services.GetRequiredService<SeedData>();
+    seedData.SeedDatabase();
+}
+if (!cmdLineInit)
+{
+    app.Run();
+}
