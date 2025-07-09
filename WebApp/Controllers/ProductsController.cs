@@ -30,14 +30,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            return Ok(new
-            {
-                p.ProductId,
-                p.Name,
-                p.Price,
-                p.CategoryId,
-                p.SupplierId
-            });
+            return Ok(p);
         }
 
         [HttpPost]
