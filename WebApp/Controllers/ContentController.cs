@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 
@@ -17,7 +18,10 @@ namespace WebApp.Controllers
         }
 
         [HttpGet("string")]
-        public string GetString() => "This is a string response";
+        [OutputCache(PolicyName = "30sec")]
+        [Produces("application/json")]
+        public string GetString() =>
+            $"{DateTime.Now.ToLongTimeString()} String response";
 
         [HttpGet("object/{format?}")]
         [FormatFilter]

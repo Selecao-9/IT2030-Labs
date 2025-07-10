@@ -32,11 +32,17 @@ builder.Services.Configure<MvcOptions>(opts => {
     opts.ReturnHttpNotAcceptable = true;
 });
 
+builder.Services.AddOutputCache(opts => {
+    opts.AddPolicy("30sec", policy => {
+        policy.Cache();
+        policy.Expire(TimeSpan.FromSeconds(30));
+    });
+});
 
 var app = builder.Build();
 
 app.UseRateLimiter();
-
+app.UseOutputCache();
 app.MapControllers();
 
 app.MapGet("/", () => "Hello World!");
