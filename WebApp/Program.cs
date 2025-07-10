@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
-//using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,8 @@ builder.Services.AddDbContext<DataContext>(opts => {
     opts.EnableSensitiveDataLogging(true);
 });
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddRateLimiter(opts => {
     opts.AddFixedWindowLimiter("fixedWindow", fixOpts => {
@@ -21,11 +21,6 @@ builder.Services.AddRateLimiter(opts => {
         fixOpts.Window = TimeSpan.FromSeconds(15);
     });
 });
-
-//builder.Services.Configure<JsonOptions>(opts => {
-//    opts.JsonSerializerOptions.DefaultIgnoreCondition
-//        = JsonIgnoreCondition.WhenWritingNull;
-//});
 
 builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts => {
     opts.SerializerSettings.NullValueHandling
