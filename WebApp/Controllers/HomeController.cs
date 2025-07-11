@@ -30,5 +30,9 @@ namespace WebApp.Controllers
         {
             return View();
         }
+        public IActionResult WrongModel()
+        {
+            return View("Watersports", "Hello, World!");
+        }
     }
 }
