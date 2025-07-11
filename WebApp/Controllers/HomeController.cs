@@ -34,5 +34,9 @@ namespace WebApp.Controllers
         {
             return View("Watersports", "Hello, World!");
         }
+        public IActionResult List()
+        {
+            return View(context.Products);
+        }
     }
 }
