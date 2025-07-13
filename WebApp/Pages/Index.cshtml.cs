@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebApp.Views.Shared
+namespace WebApp.Pages
 {
-    public class CubedModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {
