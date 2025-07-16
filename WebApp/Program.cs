@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Antiforgery;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,26 +9,37 @@ builder.Services.AddDbContext<DataContext>(opts => {
         "ConnectionStrings:ProductConnection"]);
     opts.EnableSensitiveDataLogging(true);
 });
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options => {
-    options.Cookie.IsEssential = true;
-});
-
-builder.Services.Configure<RazorPagesOptions>(opts => {
-    opts.Conventions.AddPageRoute("/Index", "/extra/page/{id:long?}");
-});
-
 builder.Services.AddSingleton<CitiesData>();
+
+builder.Services.Configure<AntiforgeryOptions>(opts => {
+    opts.HeaderName = "X-XSRF-TOKEN";
+});
 
 var app = builder.Build();
 
 app.UseStaticFiles();
-app.UseSession();
-app.MapControllers();
-app.MapDefaultControllerRoute();
+
+IAntiforgery antiforgery
+    = app.Services.GetRequiredService<IAntiforgery>();
+app.Use(async (context, next) => {
+    if (!context.Request.Path.StartsWithSegments("/api"))
+    {
+        string? token =
+            antiforgery.GetAndStoreTokens(context).RequestToken;
+        if (token != null)
+        {
+            context.Response.Cookies.Append("XSRF-TOKEN",
+               token,
+               new CookieOptions { HttpOnly = false });
+        }
+    }
+    await next();
+});
+
+app.MapControllerRoute("forms",
+    "controllers/{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 var context = app.Services.CreateScope().ServiceProvider
