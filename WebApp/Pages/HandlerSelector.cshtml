@@ -1,4 +1,4 @@
-﻿@page
+﻿﻿@page
 @model HandlerSelectorModel
 @using Microsoft.AspNetCore.Mvc.RazorPages
 @using Microsoft.EntityFrameworkCore
@@ -26,8 +26,8 @@
             </tbody>
         </table>
         <a href="/handlerselector" class="btn btn-primary">Standard</a>
-        <a href="/handlerselector?handler=related"
-           class="btn btn-primary">
+        <a href="/handlerselector?handler=related" 
+                class="btn btn-primary">
             Related
         </a>
     </div>
@@ -36,34 +36,28 @@
 
 @functions {
 
-    public class HandlerSelectorModel : PageModel
-    {
+    public class HandlerSelectorModel : PageModel {
         private DataContext context;
 
         public Product? Product { get; set; }
 
-        public HandlerSelectorModel(DataContext ctx)
-        {
+        public HandlerSelectorModel(DataContext ctx) {
             context = ctx;
         }
 
-        public async Task OnGetAsync(long id = 1)
-        {
+        public async Task OnGetAsync(long id = 1) {
             Product = await context.Products.FindAsync(id);
         }
 
-        public async Task OnGetRelatedAsync(long id = 1)
-        {
+        public async Task OnGetRelatedAsync(long id = 1) {
             Product = await context.Products
                 .Include(p => p.Supplier)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
-            if (Product != null && Product.Supplier != null)
-            {
+            if (Product != null && Product.Supplier != null) {
                 Product.Supplier.Products = null;
             }
-            if (Product != null && Product.Category != null)
-            {
+            if (Product != null && Product.Category != null) {
                 Product.Category.Products = null;
             }
         }
