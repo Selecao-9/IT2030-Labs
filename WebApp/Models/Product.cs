@@ -13,7 +13,7 @@ namespace WebApp.Models
         public required string Name { get; set; }
 
         [Column(TypeName = "decimal(8, 2)")]
-        [BindNever]
+        
         public decimal Price { get; set; }
 
         public long CategoryId { get; set; }
