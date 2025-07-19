@@ -9,11 +9,11 @@ namespace WebApp.Models
     {
 
         public long ProductId { get; set; }
-
+        [Required(ErrorMessage = "Please enter a name")]
         public required string Name { get; set; }
 
+        [Range(1, 999999, ErrorMessage = "Please enter a positive price")]
         [Column(TypeName = "decimal(8, 2)")]
-        
         public decimal Price { get; set; }
 
         public long CategoryId { get; set; }
