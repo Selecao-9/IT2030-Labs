@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace WebApp.Models
 {
@@ -12,8 +13,7 @@ namespace WebApp.Models
         public required string Name { get; set; }
 
         [Column(TypeName = "decimal(8, 2)")]
-        //[DisplayFormat(DataFormatString = "{0:c2}", 
-        //    ApplyFormatInEditMode = true)]
+        [BindNever]
         public decimal Price { get; set; }
 
         public long CategoryId { get; set; }
@@ -25,5 +25,3 @@ namespace WebApp.Models
         public Supplier? Supplier { get; set; }
     }
 }
-
-
