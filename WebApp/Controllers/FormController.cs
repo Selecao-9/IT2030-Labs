@@ -42,9 +42,16 @@ namespace WebApp.Controllers
         {
             return View();
         }
-        public string Header([FromHeader] string accept)
+        public string Header([FromHeader(Name = "Accept-Language")]
+                string accept)
         {
             return $"Header: {accept}";
+        }
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public Product Body([FromBody] Product model)
+        {
+            return model;
         }
     }
 }
