@@ -26,11 +26,18 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult SubmitForm(Product product)
         {
-            TempData["name"] = product.Name;
-            TempData["price"] = product.Price.ToString();
-            TempData["categoryId"] = product.CategoryId.ToString();
-            TempData["supplierId"] = product.SupplierId.ToString();
-            return RedirectToAction(nameof(Results));
+            if (ModelState.IsValid)
+            {
+                TempData["name"] = product.Name;
+                TempData["price"] = product.Price.ToString();
+                TempData["categoryId"] = product.CategoryId.ToString();
+                TempData["supplierId"] = product.SupplierId.ToString();
+                return RedirectToAction(nameof(Results));
+            }
+            else
+            {
+                return View("Form");
+            }
         }
 
         public IActionResult Results()
