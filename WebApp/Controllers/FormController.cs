@@ -2,6 +2,7 @@
 using WebApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace WebApp.Controllers
 {
@@ -16,22 +17,21 @@ namespace WebApp.Controllers
             context = dbContext;
         }
 
-        public async Task<IActionResult> Index(long id = 1)
+        public async Task<IActionResult> Index(long? id)
         {
             ViewBag.Categories = new SelectList(context.Categories,
                 "CategoryId", "Name");
             return View("Form", await context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
-                .FirstAsync(p => p.ProductId == id)
+                .FirstOrDefaultAsync(p => id == null || p.ProductId == id)
             ?? new() { Name = string.Empty });
         }
 
         [HttpPost]
-        public IActionResult SubmitForm(string name, decimal price)
+        public IActionResult SubmitForm(Product product)
         {
-            TempData["name param"] = name;
-            TempData["price param"] = price.ToString();
+            TempData["product"] = JsonSerializer.Serialize(product);
             return RedirectToAction(nameof(Results));
         }
 
@@ -41,3 +41,4 @@ namespace WebApp.Controllers
         }
     }
 }
+

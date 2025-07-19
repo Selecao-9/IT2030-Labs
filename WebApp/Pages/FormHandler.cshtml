@@ -8,13 +8,11 @@
     <form asp-page="FormHandler" method="post" id="htmlform">
         <div class="form-group">
             <label>Name</label>
-            <input class="form-control" asp-for="Product.Name"
-                   name="name" />
+            <input class="form-control" asp-for="Product.Name" />
         </div>
         <div class="form-group">
             <label>Price</label>
-            <input class="form-control" asp-for="Product.Price"
-                   name="price" />
+            <input class="form-control" asp-for="Product.Price" />
         </div>
         <button type="submit" class="btn btn-primary mt-2">Submit</button>
     </form>
@@ -31,6 +29,7 @@
             context = dbContext;
         }
 
+        [BindProperty]
         public Product Product { get; set; }
             = new() { Name = string.Empty };
 
@@ -42,10 +41,10 @@
                 .FirstAsync(p => p.ProductId == id);
         }
 
-        public IActionResult OnPost(string name, decimal price)
+        public IActionResult OnPost()
         {
-            TempData["name param"] = name;
-            TempData["price param"] = price.ToString();
+            TempData["product"] =
+                System.Text.Json.JsonSerializer.Serialize(Product);
             return RedirectToPage("FormResults");
         }
     }
