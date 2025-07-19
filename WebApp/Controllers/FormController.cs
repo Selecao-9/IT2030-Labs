@@ -17,7 +17,7 @@ namespace WebApp.Controllers
             context = dbContext;
         }
 
-        public async Task<IActionResult> Index(long? id)
+        public async Task<IActionResult> Index([FromQuery] long? id)
         {
             ViewBag.Categories = new SelectList(context.Categories,
                 "CategoryId", "Name");
@@ -41,6 +41,10 @@ namespace WebApp.Controllers
         public IActionResult Results()
         {
             return View();
+        }
+        public string Header([FromHeader] string accept)
+        {
+            return $"Header: {accept}";
         }
     }
 }
