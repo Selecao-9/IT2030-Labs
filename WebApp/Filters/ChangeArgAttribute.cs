@@ -2,11 +2,11 @@
 
 namespace WebApp.Filters
 {
-    public class ChangeArgAttribute : Attribute, IAsyncActionFilter
+    public class ChangeArgAttribute : ActionFilterAttribute
     {
 
-        public async Task OnActionExecutionAsync(
-                ActionExecutingContext context,
+        public override async Task OnActionExecutionAsync(
+            ActionExecutingContext context,
                 ActionExecutionDelegate next)
         {
 
