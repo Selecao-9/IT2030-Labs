@@ -6,6 +6,7 @@ namespace WebApp.Controllers
 {
 
     [HttpsOnly]
+    [ResultDiagnostics]
     public class HomeController : Controller
     {
 
