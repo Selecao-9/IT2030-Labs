@@ -7,11 +7,10 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 namespace WebApp.Filters
 {
 
-    public class ResultDiagnosticsAttribute :
-            Attribute, IAsyncResultFilter
+    public class ResultDiagnosticsAttribute : ResultFilterAttribute
     {
 
-        public async Task OnResultExecutionAsync(
+        public override async Task OnResultExecutionAsync(
                 ResultExecutingContext context,
                 ResultExecutionDelegate next)
         {
