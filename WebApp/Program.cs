@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
+using WebApp.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,10 @@ builder.Services.AddDbContext<DataContext>(opts => {
 });
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<GuidResponseAttribute>();
+builder.Services.Configure<MvcOptions>(opts =>
+    opts.Filters.Add<HttpsOnlyAttribute>());
 
 var app = builder.Build();
 
